@@ -2,7 +2,8 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const pdfParse = require("pdf-parse");
-const { getAnalysis } = require("../utils/getAnalysis");
+const getAnalysis = require('../utils/getAnalysis');
+
 
 const upload = multer();
 
