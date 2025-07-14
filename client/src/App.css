@@ -302,3 +302,25 @@ body {
   justify-content: center;
   padding-top: 4rem;
 }
+/* === Responsive Fix for Mobile Devices === */
+@media (max-width: 768px) {
+  .home-wrapper {
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+
+  .home-left {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .home-right-slider {
+    display: none; /* Hide the animation slider on mobile */
+  }
+
+  .home-button {
+    width: 100%;
+    max-width: 250px;
+  }
+}
