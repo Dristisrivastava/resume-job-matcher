@@ -26,7 +26,16 @@ const getAnalysis = async (prompt) => {
     const text = await res.text();
     console.log("📥 Raw OpenRouter response:", text);
 
-    const json = JSON.parse(text); // parse after confirming it's JSON
+    const outer = JSON.parse(text);
+    const innerContent = outer.choices?.[0]?.message?.content;
+
+    if (!innerContent) {
+      throw new Error("Missing message content");
+    }
+
+    // 🧠 Parse the stringified JSON inside 'content'
+    const json = JSON.parse(innerContent);
+
     return json;
   } catch (error) {
     console.error("❌ Error during OpenRouter call:", error.message);
