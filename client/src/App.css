@@ -296,18 +296,16 @@ body {
   }
 }
 
-/* Optional: Responsive container */
 .analyze-screen-container {
   display: flex;
   justify-content: center;
   padding-top: 4rem;
 }
-/* === Responsive Fix for Mobile Devices === */
 @media (max-width: 768px) {
   .home-wrapper {
     flex-direction: column;
+    padding: 2rem 1.5rem;
     align-items: center;
-    padding: 2rem 1rem;
   }
 
   .home-left {
@@ -316,11 +314,6 @@ body {
   }
 
   .home-right-slider {
-    display: none; /* Hide the animation slider on mobile */
-  }
-
-  .home-button {
-    width: 100%;
-    max-width: 250px;
+    display: none;
   }
 }
