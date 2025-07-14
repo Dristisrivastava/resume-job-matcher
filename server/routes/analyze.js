@@ -1,33 +1,29 @@
-const express = require('express');
-const multer = require('multer');
-const pdfParse = require('pdf-parse');
-const { getAnalysis } = require('../utils/openaiPrompt');
-
+const express = require("express");
 const router = express.Router();
+const multer = require("multer");
+const pdfParse = require("pdf-parse");
+const { getAnalysis } = require("../utils/getAnalysis");
+
 const upload = multer();
 
-router.post('/', upload.single('resume'), async (req, res) => {
-    console.log("📥 Request received at /api/analyze");
-
-    const { jobDescription } = req.body;
-    const resumeBuffer = req.file?.buffer;
-
-    if (!resumeBuffer) {
-        console.error("❌ No file received");
-        return res.status(400).json({ error: "No resume file provided." });
-    }
-
+router.post("/", upload.single("resume"), async (req, res) => {
     try {
-        const pdfText = (await pdfParse(resumeBuffer)).text;
-        console.log("📝 Extracted resume text:", pdfText.slice(0, 100) + "...");
+        const jobDescription = req.body.jobDescription;
+        const mode = req.body.mode || "recruiter";
+        const resumeFile = req.file;
 
-        const { score, explanation } = await getAnalysis(jobDescription, pdfText);
-        console.log("✅ Analysis complete:", score, explanation.slice(0, 80) + "...");
+        if (!resumeFile) {
+            return res.status(400).json({ error: "No resume file uploaded." });
+        }
 
-        res.json({ score, explanation });
+        const pdfData = await pdfParse(resumeFile.buffer);
+        const resumeText = pdfData.text;
+
+        const result = await getAnalysis(jobDescription, resumeText, mode);
+        res.json(result);
     } catch (err) {
-        console.error("❌ Error during resume analysis:", err.message);
-        res.status(500).json({ error: 'Error analyzing resume' });
+        console.error("❌ Error analyzing resume:", err.message);
+        res.status(500).json({ error: "Failed to analyze resume." });
     }
 });
 

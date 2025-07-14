@@ -1,23 +1,27 @@
-const express = require('express');
-const cors = require('cors');
-const analyzeRouter = require('./routes/analyze');
-require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const analyzeRouter = require("./routes/analyze");
+require("dotenv").config();
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/analyze', analyzeRouter);
-const path = require('path');
+// API route
+app.use("/api/analyze", analyzeRouter);
 
-// Serve static frontend files
-app.use(express.static(path.join(__dirname, '../client/build')));
+// Serve static files from React app
+const buildPath = path.resolve(__dirname, "../client/build");
+app.use(express.static(buildPath));
 
-// Fallback for SPA routing
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+// For all unmatched routes, serve React app
+app.get("*", (req, res) => {
+    res.sendFile(path.join(buildPath, "index.html"));
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`✅ Server running on http://localhost:${PORT}`);
+});
